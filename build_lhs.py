@@ -26,10 +26,12 @@ def main():
             help="output base name, xx.pdf, xx.png")
     parser.add_argument("-p", "--plot", help="Generate a plot with the LHS distribution", action="store_true")
     parser.add_argument("-v", "--verbose", help="Verbose mode...", action="store_true")
-    args = parser.parse_args()
-
-
-
+        
+    try:
+        args = parser.parse_args()
+    except:
+        parser.print_help()
+        sys.exit(0)
 
     # Load argument
     dim = args.dim
