@@ -12,11 +12,9 @@ from scipy import stats, integrate
 import seaborn as sns
 
 
-def build_LHS(dim, sample, method, it):
-    return lhs(dim, samples=sample, criterion=method, iterations=it)
 
 
-def build_plot(LHS, filename):
+def plot(LHS, filename):
     df = pd.DataFrame(LHS)
     g = sns.PairGrid(df)
     g.map_diag(sns.kdeplot)
@@ -25,7 +23,7 @@ def build_plot(LHS, filename):
     g.savefig(filename)
 
 
-def write_LHS(LHS, filename):
+def write(LHS, filename):
     np.savetxt(filename, LHS)
 
 
@@ -40,6 +38,27 @@ def normalyse_LHS(LHS, boundary):
                 a, b=boundary[j]
                 LHS[i][j]=(b - a) * LHS[i][j] + a
         return LHS
+
+
+def build_LHS(dim, sample, method, it, outfile, plot=False, verbose=False):
+
+
+    # generate LHS
+    my_LHS = lhs(dim, samples=sample, criterion=method, iterations=it)
+
+    if verbose:
+        print(my_LHS)
+
+    # Nice LHS ploting
+    if plot:
+        outpng = outfile + '.png'
+        build_plot(my_LHS, outpng)
+
+
+    return my_LHS
+
+
+
 
 def main():
 
@@ -64,27 +83,21 @@ def main():
     except:
         parser.print_help()
         sys.exit(0)
-
+    
     # Load argument
     dim=args.dim
     sample=args.sample
     it=args.iteration
     method=args.method
 
-    # generate LHS
-    my_LHS=build_LHS(dim, sample, method, it)
-
-    if args.verbose:
-        print(my_LHS)
-
-    # Nice LHS ploting
-    if args.plot:
-        outpng=args.outfile + '.png'
-        build_plot(my_LHS, outpng)
+    my_LHS = build_LHS(dim, sample, method, it, outdat, plot=args.plot,
+            verbose=argv.verbose)
 
     # Write LHS down
     outdat=args.outfile + '.dat'
     write_LHS(my_LHS, outdat)
+
+    
 
 
 if __name__ == "__main__":
