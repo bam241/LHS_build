@@ -31,7 +31,7 @@ def main():
         [0, 0.001]     # Cm246
     ]
 
-    myLHS = bh.build_LHS(17, 5000, 'corr', 20, 'outdat', plot=False,
+    myLHS = bh.build_LHS(17, 1000, 'corr', 20, 'outdat', plot=False,
                          verbose=False)
     nm_LHS = bh.normalyse_LHS(myLHS, IS)
     bh.plot(nm_LHS, 'myLHS')
